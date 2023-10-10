@@ -12,7 +12,7 @@ FetchContent_Declare(mtest
 FetchContent_MakeAvailable(mtest)
 ```
 
-Now the CMake library target `mtest` is available. For example:
+Now the CMake library target `mtest` is available. For [example](example/CMakeLists.txt):
 ```cmake
 add_executable(my_example_test my_test.c)
 target_link_libraries(my_example_test mtest)
@@ -22,7 +22,7 @@ discover_tests(my_example_test)
 ```
 
 ## Usage
-Example test file `my_test.c`:
+Example test file [`my_test.c`](example/my_test.c):
 ```C
 #include "mtest.h"
 
@@ -43,4 +43,4 @@ TEST_CASE(my_other_test_case, {
 MAIN_RUN_TESTS(my_first_test_case, my_other_test_case)
 ```
 
-See [mtest.h](include/mtest.h) for more test macros.
+See [`mtest.h`](include/mtest.h) for more test macros.
