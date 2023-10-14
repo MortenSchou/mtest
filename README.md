@@ -5,7 +5,7 @@ A minimalist C unit testing framework
 
 **mtest** is a simple, C-only unit testing framework inspired by [CuTest](https://cutest.sourceforge.net/) with some modern features inspired by [doctest](https://github.com/doctest/doctest).
 
-For more mature and feature-complete C/C++ testing frameworks, take a look at: [Boost.Test](https://github.com/boostorg/test), [Catch2](https://github.com/catchorg/Catch2), [doctest](https://github.com/doctest/doctest), or [Google Test](https://github.com/google/googletest).
+For mature and feature-complete C/C++ testing frameworks, take a look at [Boost.Test](https://github.com/boostorg/test), [Catch2](https://github.com/catchorg/Catch2), [doctest](https://github.com/doctest/doctest), or [Google Test](https://github.com/google/googletest).
 
 ## Installation (CMake)
 Recommended installation using CMake's FetchContent:
@@ -34,8 +34,8 @@ Example test file [`my_test.c`](example/my_test.c):
 
 TEST_CASE(my_first_test_case, {
   int i = 42;
-  CHECK_EQ_INT(1, i);    // Test fails but test case continues.
-  REQUIRE_GT_INT(i, 0);  // Test succeeds.
+  CHECK_EQ_INT(1, i);    // Test fails, but we continue running.
+  REQUIRE_GT_INT(i, 0);  // This test is executed and succeeds, but the test case failed due to the previous line.
 })
 
 TEST_CASE(my_other_test_case, {
