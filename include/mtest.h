@@ -6,11 +6,17 @@
 
 #define FILENAME (strrchr("/"__FILE__, '/') + 1)
 
-#define CHECK_(test, format, ...)   do { if (!(test)) { printf(format" in %s:%d\n", __VA_ARGS__, FILENAME, __LINE__); _mtest_result_ = 1; } } while (0)
-#define REQUIRE_(test, format, ...) do { if (!(test)) { printf(format" in %s:%d\n", __VA_ARGS__, FILENAME, __LINE__); return 1;           } } while (0)
+// Add file name and line number to messages.
+#define MESSAGE_(format, ...)       printf(format" in %s:%d\n", __VA_ARGS__, FILENAME, __LINE__)
+// The 'do {...} while(0)' trick allows having multiple statements in a macro and requires a terminating semicolon.
+#define CHECK_(test, format, ...)   do { if (!(test)) { MESSAGE_(format, __VA_ARGS__); _mtest_result_ = 1; } } while (0)
+#define REQUIRE_(test, format, ...) do { if (!(test)) { MESSAGE_(format, __VA_ARGS__); return 1;           } } while (0)
 
-#define CHECK(test, msg)    CHECK_(test, "%s", message)
-#define REQUIRE(test, msg)  REQUIRE_(test, "%s", message)
+#define MESSAGE(message)        MESSAGE_("%s", message)
+#define CHECK(test, message)    CHECK_(test, "%s", message)
+#define REQUIRE(test, message)  REQUIRE_(test, "%s", message)
+#define CHECK_FAIL(message)     CHECK_(0, "CHECK_FAIL: %s", message)
+#define REQUIRE_FAIL(message)   REQUIRE_(0, "REQUIRE_FAIL: %s", message)
 #define CHECK_TRUE(test)    CHECK_(test,      "CHECK_TRUE(%s) failed",    #test)
 #define CHECK_FALSE(test)   CHECK_(!(test),   "CHECK_FALSE(%s) failed",   #test)
 #define REQUIRE_TRUE(test)  REQUIRE_(test,    "REQUIRE_TRUE(%s) failed",  #test)
@@ -43,10 +49,12 @@
 #define REQUIRE_GE_DOUBLE(expected, actual) REQUIRE_((expected) >= (actual), "REQUIRE_GE_DOUBLE(%s,%s) failed (%f < %f)",  #expected, #actual, expected, actual)
 
 #define CHECK_EQ_STRING(expected, actual)           CHECK_(!strcmp((expected), (actual)),           "CHECK_EQ_STRING(%s,%s) failed (\"%s\" != \"%s\")",             #expected, #actual, expected, actual)
+#define CHECK_NE_STRING(expected, actual)           CHECK_(strcmp((expected), (actual)),            "CHECK_NE_STRING(%s,%s) failed (\"%s\" == \"%s\")",             #expected, #actual, expected, actual)
 #define REQUIRE_EQ_STRING(expected, actual)         REQUIRE_(!strcmp((expected), (actual)),         "REQUIRE_EQ_STRING(%s,%s) failed (\"%s\" != \"%s\")",           #expected, #actual, expected, actual)
+#define REQUIRE_NE_STRING(expected, actual)         REQUIRE_(strcmp((expected), (actual)),          "REQUIRE_NE_STRING(%s,%s) failed (\"%s\" == \"%s\")",           #expected, #actual, expected, actual)
 
 
-#define TEST_CASE(test_name, command)                                                                                   \
+#define TEST_CASE(test_name, command...)                                                                                \
 static int test_name(void) {                                                                                            \
     int _mtest_result_ = 0;                                                                                             \
     { command }                                                                                                         \
