@@ -1,5 +1,11 @@
-# mtest
+ # mtest
 A minimalist C unit testing framework
+ - A single header-file with plain C and `#define` macros.
+ - Plays well with CTest with a `discover_tests()` CMake function.
+
+**mtest** is a simple, C-only unit testing framework inspired by [CuTest](https://cutest.sourceforge.net/) with some modern features inspired by [doctest](https://github.com/doctest/doctest).
+
+For more mature and feature-complete C/C++ testing frameworks, take a look at: [Boost.Test](https://github.com/boostorg/test), [Catch2](https://github.com/catchorg/Catch2), [doctest](https://github.com/doctest/doctest), or [Google Test](https://github.com/google/googletest).
 
 ## Installation (CMake)
 Recommended installation using CMake's FetchContent:
