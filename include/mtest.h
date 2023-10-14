@@ -22,6 +22,7 @@
 #define REQUIRE_TRUE(test)  REQUIRE_(test,    "REQUIRE_TRUE(%s) failed",  #test)
 #define REQUIRE_FALSE(test) REQUIRE_(!(test), "REQUIRE_FALSE(%s) failed", #test)
 
+// Comparison for integer values
 #define CHECK_EQ_INT(expected, actual)   CHECK_((expected) == (actual),   "CHECK_EQ_INT(%s,%s) failed (%d != %d)",   #expected, #actual, expected, actual)
 #define CHECK_NE_INT(expected, actual)   CHECK_((expected) != (actual),   "CHECK_NE_INT(%s,%s) failed (%d == %d)",   #expected, #actual, expected, actual)
 #define CHECK_LT_INT(expected, actual)   CHECK_((expected) < (actual),    "CHECK_LT_INT(%s,%s) failed (%d >= %d)",   #expected, #actual, expected, actual)
@@ -35,6 +36,7 @@
 #define REQUIRE_LE_INT(expected, actual) REQUIRE_((expected) <= (actual), "REQUIRE_LE_INT(%s,%s) failed (%d > %d)",  #expected, #actual, expected, actual)
 #define REQUIRE_GE_INT(expected, actual) REQUIRE_((expected) >= (actual), "REQUIRE_GE_INT(%s,%s) failed (%d < %d)",  #expected, #actual, expected, actual)
 
+// Comparison for floating point values. For (non-)equality we need to specify a tolerance 'delta'.
 #define CHECK_EQ_DOUBLE(expected, actual, delta)    CHECK_(fabs((expected) - (actual)) <= (delta),   "CHECK_EQ_DOUBLE(%s,%s,%s) failed (%f != %f  +- %f)",   #expected, #actual, #delta, expected, actual, delta)
 #define CHECK_NE_DOUBLE(expected, actual, delta)    CHECK_(fabs((expected) - (actual)) > (delta),    "CHECK_EQ_DOUBLE(%s,%s,%s) failed (%f == %f  +- %f)",   #expected, #actual, #delta, expected, actual, delta)
 #define REQUIRE_EQ_DOUBLE(expected, actual, delta)  REQUIRE_(fabs((expected) - (actual)) <= (delta), "REQUIRE_EQ_DOUBLE(%s,%s,%s) failed (%f != %f  +- %f)", #expected, #actual, #delta, expected, actual, delta)
@@ -48,12 +50,13 @@
 #define REQUIRE_LE_DOUBLE(expected, actual) REQUIRE_((expected) <= (actual), "REQUIRE_LE_DOUBLE(%s,%s) failed (%f > %f)",  #expected, #actual, expected, actual)
 #define REQUIRE_GE_DOUBLE(expected, actual) REQUIRE_((expected) >= (actual), "REQUIRE_GE_DOUBLE(%s,%s) failed (%f < %f)",  #expected, #actual, expected, actual)
 
+// Comparison of strings
 #define CHECK_EQ_STRING(expected, actual)           CHECK_(!strcmp((expected), (actual)),           "CHECK_EQ_STRING(%s,%s) failed (\"%s\" != \"%s\")",             #expected, #actual, expected, actual)
 #define CHECK_NE_STRING(expected, actual)           CHECK_(strcmp((expected), (actual)),            "CHECK_NE_STRING(%s,%s) failed (\"%s\" == \"%s\")",             #expected, #actual, expected, actual)
 #define REQUIRE_EQ_STRING(expected, actual)         REQUIRE_(!strcmp((expected), (actual)),         "REQUIRE_EQ_STRING(%s,%s) failed (\"%s\" != \"%s\")",           #expected, #actual, expected, actual)
 #define REQUIRE_NE_STRING(expected, actual)         REQUIRE_(strcmp((expected), (actual)),          "REQUIRE_NE_STRING(%s,%s) failed (\"%s\" == \"%s\")",           #expected, #actual, expected, actual)
 
-
+// A test case is implemented as a function that returns 0 if the test passes and 1 if it fails.
 #define TEST_CASE(test_name, command...)                                                                                \
 static int test_name(void) {                                                                                            \
     int _mtest_result_ = 0;                                                                                             \
@@ -61,15 +64,21 @@ static int test_name(void) {                                                    
     return _mtest_result_;                                                                                              \
 }
 
+// Create an array of the function pointers passed as arguments to the macro.
+// Run each function and count success and failures.
 #define RUN_TESTS(...) do {                                                                                             \
     int success = 0, failed = 0;                                                                                        \
     int(*test_functions[])(void) = {__VA_ARGS__};                                                                       \
     for (int i = 0; i < sizeof(test_functions)/sizeof(int(*)(void)); ++i)                                               \
         test_functions[i]() ? failed++ : success++;                                                                     \
-    printf("Tests run: %d. Success: %d. Failed: %d", success+failed, success, failed);                                  \
+    printf("Tests run: %d. Succeeded: %d. Failed: %d", success+failed, success, failed);                                \
     if (failed) exit(EXIT_FAILURE);                                                                                     \
 } while(0)
 
+// Create a main function that takes as command line argument the name of the test case to run.
+// We search through the test case names passed as arguments to the macro and call the corresponding function (through the function pointer).
+// If the command line argument is --list-test-cases then the test case names are listed (semicolon-seperated). This is used for automatically registering the tests in CTest.
+// If no (or too many) command line arguments are given, all test cases are run using RUN_TESTS.
 #define MAIN_RUN_TESTS(...)                                                                                             \
 int main (int argc, char *argv[]) {                                                                                     \
     if (argc == 2) {                                                                                                    \
