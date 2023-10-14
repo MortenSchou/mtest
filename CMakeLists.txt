@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.14)
-project(mtest VERSION 0.1.0 LANGUAGES C)
+project(mtest VERSION 0.1.1 LANGUAGES C)
 
 # Determine if mtest is built as a subproject (using add_subdirectory) or if it is the main project.
 set(MAIN_PROJECT OFF)
