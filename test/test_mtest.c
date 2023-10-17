@@ -141,6 +141,23 @@ TEST_CASE(require_ge_double, {
     REQUIRE_GE_DOUBLE(a, b);
 })
 
+TEST_CASE(check_eq_char, {
+    int a = 'A', b = 'B';
+    CHECK_EQ_CHAR(a, b);  // Should fail
+})
+TEST_CASE(check_ne_char, {
+    int a = 'A', b = 'B';
+    CHECK_NE_CHAR(a, b);
+})
+TEST_CASE(require_eq_char, {
+    int a = 'A', b = 'B';
+    REQUIRE_EQ_CHAR(a, b);  // Should fail
+})
+TEST_CASE(require_ne_char, {
+    int a = 'A', b = 'B';
+    REQUIRE_NE_CHAR(a, b);
+})
+
 TEST_CASE(check_eq_string, {
     char a[] = "abc,def";
     char b1[8] = "abc";
@@ -181,4 +198,5 @@ MAIN_RUN_TESTS(message, check_msg, require_msg, check_fail, require_fail,
                check_eq_double, check_ne_double, require_eq_double, require_ne_double,
                check_lt_double, check_gt_double, check_le_double, check_ge_double,
                require_lt_double, require_gt_double, require_le_double, require_ge_double,
+               check_eq_char, check_ne_char, require_eq_char, require_ne_char,
                check_eq_string, check_ne_string, require_eq_string, require_ne_string)

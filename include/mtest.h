@@ -50,11 +50,17 @@
 #define REQUIRE_LE_DOUBLE(expected, actual) REQUIRE_((expected) <= (actual), "REQUIRE_LE_DOUBLE(%s,%s) failed (%f > %f)",  #expected, #actual, expected, actual)
 #define REQUIRE_GE_DOUBLE(expected, actual) REQUIRE_((expected) >= (actual), "REQUIRE_GE_DOUBLE(%s,%s) failed (%f < %f)",  #expected, #actual, expected, actual)
 
+// Comparison of chars
+#define CHECK_EQ_CHAR(expected, actual)   CHECK_((expected) == (actual),   "CHECK_EQ_CHAR(%s,%s) failed ('%c' != '%c')",   #expected, #actual, expected, actual)
+#define CHECK_NE_CHAR(expected, actual)   CHECK_((expected) != (actual),   "CHECK_NE_CHAR(%s,%s) failed ('%c' == '%c')",   #expected, #actual, expected, actual)
+#define REQUIRE_EQ_CHAR(expected, actual) REQUIRE_((expected) == (actual), "REQUIRE_EQ_CHAR(%s,%s) failed ('%c' != '%c')", #expected, #actual, expected, actual)
+#define REQUIRE_NE_CHAR(expected, actual) REQUIRE_((expected) != (actual), "REQUIRE_NE_CHAR(%s,%s) failed ('%c' == '%c')", #expected, #actual, expected, actual)
+
 // Comparison of strings
-#define CHECK_EQ_STRING(expected, actual)           CHECK_(!strcmp((expected), (actual)),           "CHECK_EQ_STRING(%s,%s) failed (\"%s\" != \"%s\")",             #expected, #actual, expected, actual)
-#define CHECK_NE_STRING(expected, actual)           CHECK_(strcmp((expected), (actual)),            "CHECK_NE_STRING(%s,%s) failed (\"%s\" == \"%s\")",             #expected, #actual, expected, actual)
-#define REQUIRE_EQ_STRING(expected, actual)         REQUIRE_(!strcmp((expected), (actual)),         "REQUIRE_EQ_STRING(%s,%s) failed (\"%s\" != \"%s\")",           #expected, #actual, expected, actual)
-#define REQUIRE_NE_STRING(expected, actual)         REQUIRE_(strcmp((expected), (actual)),          "REQUIRE_NE_STRING(%s,%s) failed (\"%s\" == \"%s\")",           #expected, #actual, expected, actual)
+#define CHECK_EQ_STRING(expected, actual)   CHECK_(!strcmp((expected), (actual)),   "CHECK_EQ_STRING(%s,%s) failed (\"%s\" != \"%s\")",   #expected, #actual, expected, actual)
+#define CHECK_NE_STRING(expected, actual)   CHECK_(strcmp((expected), (actual)),    "CHECK_NE_STRING(%s,%s) failed (\"%s\" == \"%s\")",   #expected, #actual, expected, actual)
+#define REQUIRE_EQ_STRING(expected, actual) REQUIRE_(!strcmp((expected), (actual)), "REQUIRE_EQ_STRING(%s,%s) failed (\"%s\" != \"%s\")", #expected, #actual, expected, actual)
+#define REQUIRE_NE_STRING(expected, actual) REQUIRE_(strcmp((expected), (actual)),  "REQUIRE_NE_STRING(%s,%s) failed (\"%s\" == \"%s\")", #expected, #actual, expected, actual)
 
 // A test case is implemented as a function that returns 0 if the test passes and 1 if it fails.
 #define TEST_CASE(test_name, command...)                                                                                \
