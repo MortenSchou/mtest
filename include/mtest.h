@@ -63,10 +63,10 @@
 #define REQUIRE_NE_STRING(expected, actual) REQUIRE_(strcmp((expected), (actual)),  "REQUIRE_NE_STRING(%s,%s) failed (\"%s\" == \"%s\")", #expected, #actual, expected, actual)
 
 // A test case is implemented as a function that returns 0 if the test passes and 1 if it fails.
-#define TEST_CASE(test_name, command...)                                                                                \
+#define TEST_CASE(test_name, ...)                                                                                       \
 static int test_name(void) {                                                                                            \
     int _mtest_result_ = 0;                                                                                             \
-    { command }                                                                                                         \
+    { __VA_ARGS__ }                                                                                                     \
     return _mtest_result_;                                                                                              \
 }
 
