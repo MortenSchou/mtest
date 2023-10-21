@@ -75,7 +75,7 @@ static int test_name(void) {                                                    
 #define RUN_TESTS(...) do {                                                                                             \
     int success = 0, failed = 0;                                                                                        \
     int(*test_functions[])(void) = {__VA_ARGS__};                                                                       \
-    for (int i = 0; i < sizeof(test_functions)/sizeof(int(*)(void)); ++i)                                               \
+    for (int i = 0; i < (int)(sizeof(test_functions)/sizeof(int(*)(void))); ++i)                                        \
         test_functions[i]() ? failed++ : success++;                                                                     \
     printf("Tests run: %d. Succeeded: %d. Failed: %d", success+failed, success, failed);                                \
     if (failed) exit(EXIT_FAILURE);                                                                                     \
@@ -94,7 +94,7 @@ int main (int argc, char *argv[]) {                                             
         char* names = (char *)malloc(strlen(names_static)+1);                                                           \
         strcpy(names, names_static);                                                                                    \
         char* token = strtok(names, " ,");                                                                              \
-        for (int i = 0; token != NULL && i < sizeof(test_functions)/sizeof(int(*)(void)); ++i) {                        \
+        for (int i = 0; token != NULL && i < (int)(sizeof(test_functions)/sizeof(int(*)(void))); ++i) {                 \
             if (list_test_cases) {                                                                                      \
                 printf("%s;", token);                                                                                   \
             } else if (strcmp(argv[1], token) == 0) {                                                                   \
