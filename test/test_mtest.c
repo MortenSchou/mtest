@@ -1,7 +1,18 @@
 #include "mtest.h"
 
-// We make a test case for each test macro in "mtest.h".
-// This does not guarantee correctness, but it ensures that all code is covered.
+// We make a test case for each test macro in "mtest.h" for coverage testing.
+
+// Enable a test case to fail gracefully by wrapping and inverting the result of
+// the specified TEST_CASE.
+// Note that this macro is created for internal use within this test suite only.
+// For regular usage of "mtest.h", consider macros named `_NE_` and similar
+// to invert the test conditions themselves, rather than resorting to
+// full test case inversion.
+#define TEST_FAILING_CASE(test_name, command...) \
+TEST_CASE(wrapped_##test_name, { command }) \
+static int test_name(void) { \
+    return wrapped_##test_name() ? 0 : 1; \
+}
 
 TEST_CASE(message, {
     MESSAGE("They see me rolling.");
@@ -14,35 +25,35 @@ TEST_CASE(require_msg, {
     int a = 0, b = 1;
     REQUIRE(a < b, "This should be true.");
 })
-TEST_CASE(check_fail, {
+TEST_FAILING_CASE(check_fail, {
     int a = 0, b = 1;
-    if (a < b) CHECK_FAIL("Ohh, a was less than b.");  // Should fail
+    if (a < b) CHECK_FAIL("Ohh, a was less than b.");
 })
-TEST_CASE(require_fail, {
+TEST_FAILING_CASE(require_fail, {
     int a = 0, b = 1;
-    if (a < b) REQUIRE_FAIL("Ohh, a was less than b.");  // Should fail
+    if (a < b) REQUIRE_FAIL("Ohh, a was less than b.");
 })
 
 TEST_CASE(check_true, {
     int a = 0, b = 1;
     CHECK_TRUE(a < b);
 })
-TEST_CASE(check_false, {
+TEST_FAILING_CASE(check_false, {
     int a = 0, b = 1;
-    CHECK_FALSE(a < b);  // Should fail
+    CHECK_FALSE(a < b);
 })
 TEST_CASE(require_true, {
     int a = 0, b = 1;
     REQUIRE_TRUE(a < b);
 })
-TEST_CASE(require_false, {
+TEST_FAILING_CASE(require_false, {
     int a = 0, b = 1;
-    REQUIRE_FALSE(a < b);  // Should fail
+    REQUIRE_FALSE(a < b);
 })
 
-TEST_CASE(check_eq_int, {
+TEST_FAILING_CASE(check_eq_int, {
     int a = 0, b = 1;
-    CHECK_EQ_INT(a, b);  // Should fail
+    CHECK_EQ_INT(a, b);
 })
 TEST_CASE(check_ne_int, {
     int a = 0, b = 1;
@@ -52,22 +63,22 @@ TEST_CASE(check_lt_int, {
     int a = 0, b = 1;
     CHECK_LT_INT(a, b);
 })
-TEST_CASE(check_gt_int, {
+TEST_FAILING_CASE(check_gt_int, {
     int a = 0, b = 1;
-    CHECK_GT_INT(a, b);  // Should fail
+    CHECK_GT_INT(a, b);
 })
 TEST_CASE(check_le_int, {
     int a = 0, b = 1;
     CHECK_LE_INT(a, b);
 })
-TEST_CASE(check_ge_int, {
+TEST_FAILING_CASE(check_ge_int, {
     int a = 0, b = 1;
-    CHECK_GE_INT(a, b);  // Should fail
+    CHECK_GE_INT(a, b);
 })
 
-TEST_CASE(require_eq_int, {
+TEST_FAILING_CASE(require_eq_int, {
     int a = 0, b = 1;
-    REQUIRE_EQ_INT(a, b);  // Should fail
+    REQUIRE_EQ_INT(a, b);
 })
 TEST_CASE(require_ne_int, {
     int a = 0, b = 1;
@@ -77,81 +88,81 @@ TEST_CASE(require_lt_int, {
     int a = 0, b = 1;
     REQUIRE_LT_INT(a, b);
 })
-TEST_CASE(require_gt_int, {
+TEST_FAILING_CASE(require_gt_int, {
     int a = 0, b = 1;
-    REQUIRE_GT_INT(a, b);  // Should fail
+    REQUIRE_GT_INT(a, b);
 })
 TEST_CASE(require_le_int, {
     int a = 0, b = 1;
     REQUIRE_LE_INT(a, b);
 })
-TEST_CASE(require_ge_int, {
+TEST_FAILING_CASE(require_ge_int, {
     int a = 0, b = 1;
-    REQUIRE_GE_INT(a, b);  // Should fail
+    REQUIRE_GE_INT(a, b);
 })
 
 TEST_CASE(check_eq_double, {
     double a = M_PI, b = 3.141592;
     CHECK_EQ_DOUBLE(a, b, 0.000001);
 })
-TEST_CASE(check_ne_double, {
+TEST_FAILING_CASE(check_ne_double, {
     double a = M_PI, b = 3.141592;
-    CHECK_NE_DOUBLE(a, b, 0.000001);  // Should fail
+    CHECK_NE_DOUBLE(a, b, 0.000001);
 })
 TEST_CASE(require_eq_double, {
     double a = M_PI, b = 3.141592;
     REQUIRE_EQ_DOUBLE(a, b, 0.000001);
 })
-TEST_CASE(require_ne_double, {
+TEST_FAILING_CASE(require_ne_double, {
     double a = M_PI, b = 3.141592;
-    REQUIRE_NE_DOUBLE(a, b, 0.000001);  // Should fail
+    REQUIRE_NE_DOUBLE(a, b, 0.000001);
 })
 
-TEST_CASE(check_lt_double, {
+TEST_FAILING_CASE(check_lt_double, {
     double a = M_PI, b = 3.141592;
-    CHECK_LT_DOUBLE(a, b);  // Should fail
+    CHECK_LT_DOUBLE(a, b);
 })
 TEST_CASE(check_gt_double, {
     double a = M_PI, b = 3.141592;
     CHECK_GT_DOUBLE(a, b);
 })
-TEST_CASE(check_le_double, {
+TEST_FAILING_CASE(check_le_double, {
     double a = M_PI, b = 3.141592;
-    CHECK_LE_DOUBLE(a, b);  // Should fail
+    CHECK_LE_DOUBLE(a, b);
 })
 TEST_CASE(check_ge_double, {
     double a = M_PI, b = 3.141592;
     CHECK_GE_DOUBLE(a, b);
 })
 
-TEST_CASE(require_lt_double, {
+TEST_FAILING_CASE(require_lt_double, {
     double a = M_PI, b = 3.141592;
-    REQUIRE_LT_DOUBLE(a, b);  // Should fail
+    REQUIRE_LT_DOUBLE(a, b);
 })
 TEST_CASE(require_gt_double, {
     double a = M_PI, b = 3.141592;
     REQUIRE_GT_DOUBLE(a, b);
 })
-TEST_CASE(require_le_double, {
+TEST_FAILING_CASE(require_le_double, {
     double a = M_PI, b = 3.141592;
-    REQUIRE_LE_DOUBLE(a, b);  // Should fail
+    REQUIRE_LE_DOUBLE(a, b);
 })
 TEST_CASE(require_ge_double, {
     double a = M_PI, b = 3.141592;
     REQUIRE_GE_DOUBLE(a, b);
 })
 
-TEST_CASE(check_eq_char, {
+TEST_FAILING_CASE(check_eq_char, {
     int a = 'A', b = 'B';
-    CHECK_EQ_CHAR(a, b);  // Should fail
+    CHECK_EQ_CHAR(a, b);
 })
 TEST_CASE(check_ne_char, {
     int a = 'A', b = 'B';
     CHECK_NE_CHAR(a, b);
 })
-TEST_CASE(require_eq_char, {
+TEST_FAILING_CASE(require_eq_char, {
     int a = 'A', b = 'B';
-    REQUIRE_EQ_CHAR(a, b);  // Should fail
+    REQUIRE_EQ_CHAR(a, b);
 })
 TEST_CASE(require_ne_char, {
     int a = 'A', b = 'B';
@@ -166,13 +177,13 @@ TEST_CASE(check_eq_string, {
     strcat(b1, b2);
     CHECK_EQ_STRING(a, b1);
 })
-TEST_CASE(check_ne_string, {
+TEST_FAILING_CASE(check_ne_string, {
     char a[] = "abc,def";
     char b1[8] = "abc";
     char b2[] = "def";
     strcat(b1, ",");
     strcat(b1, b2);
-    CHECK_NE_STRING(a, b1);  // Should fail
+    CHECK_NE_STRING(a, b1);
 })
 TEST_CASE(require_eq_string, {
     char a[] = "abc,def";
@@ -182,13 +193,13 @@ TEST_CASE(require_eq_string, {
     strcat(b1, b2);
     REQUIRE_EQ_STRING(a, b1);
 })
-TEST_CASE(require_ne_string, {
+TEST_FAILING_CASE(require_ne_string, {
     char a[] = "abc,def";
     char b1[8] = "abc";
     char b2[] = "def";
     strcat(b1, ",");
     strcat(b1, b2);
-    REQUIRE_NE_STRING(a, b1);  // Should fail
+    REQUIRE_NE_STRING(a, b1);
 })
 
 MAIN_RUN_TESTS(message, check_msg, require_msg, check_fail, require_fail,
