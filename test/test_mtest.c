@@ -8,8 +8,8 @@
 // For regular usage of "mtest.h", consider macros named `_NE_` and similar
 // to invert the test conditions themselves, rather than resorting to
 // full test case inversion.
-#define TEST_FAILING_CASE(test_name, command...) \
-TEST_CASE(wrapped_##test_name, { command }) \
+#define TEST_FAILING_CASE(test_name, ...) \
+TEST_CASE(wrapped_##test_name, { __VA_ARGS__ }) \
 static int test_name(void) { \
     return wrapped_##test_name() ? 0 : 1; \
 }
