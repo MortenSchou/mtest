@@ -13,7 +13,7 @@ TEST_CASE(my_other_test_case, {
 })
 
 TEST_CASE(my_dependent_test_case, {
-    double i = 0;
+    int i = 0;
     // REQUIRE checks will stop executing a test case early if it fails.
     // This is helpful for when our test modifies a shared variable. For example:
     REQUIRE_EQ_INT(0, i++);
