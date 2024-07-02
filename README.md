@@ -8,7 +8,16 @@ A minimalist C unit testing framework
 For mature and feature-complete C/C++ testing frameworks, take a look at [Boost.Test](https://github.com/boostorg/test), [Catch2](https://github.com/catchorg/Catch2), [doctest](https://github.com/doctest/doctest), or [Google Test](https://github.com/google/googletest).
 
 ## Installation (CMake)
-Recommended installation using CMake's FetchContent:
+Recommended installation using CMake's FetchContent to download the latest release:
+```cmake
+include(FetchContent)
+FetchContent_Declare(mtest
+    URL https://github.com/MortenSchou/mtest/archive/refs/tags/v0.1.3.zip
+    URL_HASH SHA256=176b32fa263848030a758a09e3a2dbeb892cef1826a344468351376d7afb8603
+)
+FetchContent_MakeAvailable(mtest)
+```
+or (alternatively) specify the Git repository and version to download:
 ```cmake
 include(FetchContent)
 FetchContent_Declare(mtest
