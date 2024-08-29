@@ -13,7 +13,7 @@ Ensure the CMake library target `mtest` is available, see the below [Install sec
 
 Once you have installed `mtest`, add something like the following code to your [CMakeLists.txt](example/CMakeLists.txt).
 ```cmake
-# ... Put `FetchContent_Declare(mtest ...)` or `add_subdirectory(mtest)` here ...
+# Put `FetchContent_MakeAvailable(mtest ...)`, `add_subdirectory(mtest)` or `find_package(mtest)` here.
 
 add_executable(my_example_test my_test.c)
 target_link_libraries(my_example_test mtest)
@@ -78,6 +78,9 @@ FetchContent_Declare(mtest
 FetchContent_MakeAvailable(mtest)
 ```
 
+Updates can be done by changing the `URL` and `URL_HASH` in the first approach,
+or by changing the `GIT_TAG` in the second approach.
+
 ### Using Git external submodules
 
 Lets you manage mtest as a linked directory managed by git. This is the
@@ -99,17 +102,17 @@ else()
 endif()
 ```
 
-Updating mtest can be done with `git submodule update` and then committing the
-updated submodule directory.
+Updating mtest can be done with the `git submodule update` command, then
+using git to commit the updated submodule directory.
 
-### Not Recommended: Using system installed mtest
+### NOT RECOMMENDED: Using system installed `mtest`
 
 This is likely not what you want, and it is recommended you pick one of the
 other approaches, as this does not ensure that anyone using your project will
 have the same mtest library installed as you, or even that its installed.
 
-However, this approach can be handy if you are packaging your project, or have
-installed mtest as part of your operating system.
+However, this approach can be helpful if you are packaging your project, or have
+otherwise installed mtest as part of your operating system.
 
 If you do not have mtest already installed, you can run the following two
 commands:
@@ -118,14 +121,14 @@ cmake -B cmake_build -S . -DCMAKE_BUILD_TYPE=Release -DMTEST_INSTALL=ON
 sudo cmake --install cmake_build
 ```
 
-Then you can add the following to your root CMakeLists.txt:
+Then you can add the following to your primary CMakeLists.txt:
 ```cmake
 find_package(mtest REQUIRED)
 ```
 
-To update you need to `git pull` this project folder, and rerun the above cmake
-commands.
+To update when using `cmake --install`, you need to `git pull` this project,
+and rerun the above cmake commands.
 
-To uninstall, you need to go manually delete each file listed in the generated
-`cmake_build/install_manifest.txt` file.
-
+To uninstall the `cmake --install` approach, you need to go manually
+delete each file as listed in the generated `cmake_build/install_manifest.txt`
+file.
