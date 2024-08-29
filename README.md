@@ -5,9 +5,58 @@ A minimalist C unit testing framework
 
 **mtest** is a simple, C-only unit testing framework inspired by [CuTest](https://cutest.sourceforge.net/) with some modern features inspired by [doctest](https://github.com/doctest/doctest).
 
-For mature and feature-complete C/C++ testing frameworks, take a look at [Boost.Test](https://github.com/boostorg/test), [Catch2](https://github.com/catchorg/Catch2), [doctest](https://github.com/doctest/doctest), or [Google Test](https://github.com/google/googletest).
+For more mature and feature-complete C/C++ testing frameworks, take a look at [Boost.Test](https://github.com/boostorg/test), [Catch2](https://github.com/catchorg/Catch2), [doctest](https://github.com/doctest/doctest), or [Google Test](https://github.com/google/googletest).
 
-## Installation (CMake)
+## Usage
+
+Ensure the CMake library target `mtest` is available, see the below [Install section][##Installation].
+
+Once you have installed `mtest`, add something like the following code to your [CMakeLists.txt](example/CMakeLists.txt).
+```cmake
+# ... Put `FetchContent_Declare(mtest ...)` or `add_subdirectory(mtest)` here ...
+
+add_executable(my_example_test my_test.c)
+target_link_libraries(my_example_test mtest)
+
+# Automatically discover test cases in my_example_test and add them to CTest.
+discover_tests(my_example_test)
+```
+
+Where the example test file [`my_test.c`](example/my_test.c) looks something like the following:
+```c
+#include "mtest.h"
+
+TEST_CASE(my_first_test_case, {
+    int i = 42;
+    CHECK_EQ_INT(42, i); // A simple check, similar to asking if `42 == i`.
+})
+
+TEST_CASE(my_other_test_case, {
+    double i = 3.14;
+    CHECK_EQ_DOUBLE(3.14, i, 0.01); // When comparing doubles, we need to specify a tolerance - here we choose 0.01
+})
+
+TEST_CASE(my_dependent_test_case, {
+    int i = 0;
+    // REQUIRE checks will stop executing a test case early if it fails.
+    // This is helpful for when our test modifies a shared variable. For example:
+    REQUIRE_EQ_INT(0, i++);
+    // Now the following check would only make sense if the above condition succeeded.
+    // Therefore, we say the above test is required, since otherwise our check wouldn't
+    // give us any meaningful output.
+    CHECK_EQ_INT(1, i);
+})
+
+// This macro creates a main function that can call each test case, and it tells CTest which test cases are available.
+MAIN_RUN_TESTS(my_first_test_case, my_other_test_case, my_dependent_test_case)
+```
+
+See [`mtest.h`](include/mtest.h) for all test macros.
+
+## Installation
+
+### Recommended: Using CMake's FetchContent
+
 Recommended installation using CMake's FetchContent to download the latest release:
 ```cmake
 include(FetchContent)
@@ -17,7 +66,9 @@ FetchContent_Declare(mtest
 )
 FetchContent_MakeAvailable(mtest)
 ```
-or (alternatively) specify the Git repository and version to download:
+
+Or alternatively you can specify the Git repository and version to download:
+
 ```cmake
 include(FetchContent)
 FetchContent_Declare(mtest
@@ -27,35 +78,54 @@ FetchContent_Declare(mtest
 FetchContent_MakeAvailable(mtest)
 ```
 
-Now the CMake library target `mtest` is available. For [example](example/CMakeLists.txt):
+### Using Git external submodules
+
+Lets you manage mtest as a linked directory managed by git. This is the
+more traditional way of linking dependencies.
+
+Open a terminal and ensure you are inside your project's root
+(where your main CMakeLists.txt file is located). Then type the following:
+```bash
+mkdir extern
+git submodule add https://github.com/MortenSchou/mtest.git extern/mtest
+```
+
+Now you can add the following to your CMakeLists.txt:
 ```cmake
-add_executable(my_example_test my_test.c)
-target_link_libraries(my_example_test mtest)
-
-# Automatically discover test cases in my_example_test and add them to CTest.
-discover_tests(my_example_test)
+if(NOT EXISTS "${PROJECT_SOURCE_DIR}/extern/mtest/CMakeLists.txt")
+    message(FATAL_ERROR "The git submodules were not downloaded! GIT_SUBMODULE was turned off or failed. Did you forget to run `git submodule init` after cloning?")
+else()
+    add_subdirectory(extern/mtest)
+endif()
 ```
 
-## Usage
-Example test file [`my_test.c`](example/my_test.c):
-```C
-#include "mtest.h"
+Updating mtest can be done with `git submodule update` and then committing the
+updated submodule directory.
 
-TEST_CASE(my_first_test_case, {
-  int i = 42;
-  CHECK_EQ_INT(1, i);    // Test fails, but we continue running.
-  REQUIRE_GT_INT(i, 0);  // This test is executed and succeeds, but the test case failed due to the previous line.
-})
+### Not Recommended: Using system installed mtest
 
-TEST_CASE(my_other_test_case, {
-  double i = 3.14;
-  // When comparing doubles, we need to specify a tolerance - here we choose 0.01
-  REQUIRE_EQ_DOUBLE(4.0, i, 0.01);  // Test fails and the test case exits.
-  CHECK_TRUE(1);                    // Not executed but it would succeed.
-})
+This is likely not what you want, and it is recommended you pick one of the
+other approaches, as this does not ensure that anyone using your project will
+have the same mtest library installed as you, or even that its installed.
 
-// This macro creates a main function that can call each test case, and it tells CTest which test cases are available. 
-MAIN_RUN_TESTS(my_first_test_case, my_other_test_case)
+However, this approach can be handy if you are packaging your project, or have
+installed mtest as part of your operating system.
+
+If you do not have mtest already installed, you can run the following two
+commands:
+```bash
+cmake -B cmake_build -S . -DCMAKE_BUILD_TYPE=Release -DMTEST_INSTALL=ON
+sudo cmake --install cmake_build
 ```
 
-See [`mtest.h`](include/mtest.h) for more test macros.
+Then you can add the following to your root CMakeLists.txt:
+```cmake
+find_package(mtest REQUIRED)
+```
+
+To update you need to `git pull` this project folder, and rerun the above cmake
+commands.
+
+To uninstall, you need to go manually delete each file listed in the generated
+`cmake_build/install_manifest.txt` file.
+

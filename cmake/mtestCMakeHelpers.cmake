@@ -17,9 +17,4 @@ function(discover_tests)
     endforeach()
 endfunction()
 
-# Specify location of the mtest_add_tests.cmake script relative to current location (not relative to where discover_tests() is called). 
-if(${MAIN_PROJECT})
-    set(_MTEST_DISCOVER_TEST_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/mtest_add_tests.cmake)
-else ()
-    set(_MTEST_DISCOVER_TEST_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/mtest_add_tests.cmake PARENT_SCOPE)
-endif ()
+set(_MTEST_DISCOVER_TEST_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/mtestCTestRunner.cmake)
