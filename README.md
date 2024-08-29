@@ -9,7 +9,7 @@ For more mature and feature-complete C/C++ testing frameworks, take a look at [B
 
 ## Usage
 
-Ensure the CMake library target `mtest` is available, see the below [Install section][##Installation].
+Ensure the CMake library target `mtest` is available, see the below [Installation section](#installation).
 
 Once you have installed `mtest`, add something like the following code to your [CMakeLists.txt](example/CMakeLists.txt).
 ```cmake
