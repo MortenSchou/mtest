@@ -26,7 +26,8 @@ endif()
 # Include the CMake Helper to get the discover_tests function.
 include(cmake/mtestCMakeHelpers.cmake)
 
-# Configure the example test if this is the main project.
+# Configure the example and tests if this is the main project (and not built as
+# a subproject using for example add_subdirectory).
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     enable_testing()
     add_subdirectory(example)
