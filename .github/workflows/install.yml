@@ -1,0 +1,93 @@
+# MIT Licensed
+# Copyright (c) 2024 soupglasses
+# Copyright (c) 2020 GitHub
+# See original: https://github.com/actions/starter-workflows/blob/main/ci/cmake-multi-platform.yml
+
+name: CMake Install
+
+on:
+  push:
+    # branches: [ $default-branch ]
+  pull_request:
+    # branches: [ $default-branch ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: FetchContent Test
+      run: |
+        set -x
+        mkdir ../fetchcontent_mtest
+        cp example/my_test.c ../fetchcontent_mtest/my_test.c
+        cd ../fetchcontent_mtest
+        cat <<EOF > CMakeLists.txt
+        cmake_minimum_required(VERSION 3.14)
+        project(mtest_example_fetchcontent LANGUAGES C)
+        include(FetchContent)
+        FetchContent_Declare(mtest SOURCE_DIR "\${CMAKE_CURRENT_LIST_DIR}/../mtest/")
+        FetchContent_MakeAvailable(mtest)
+        enable_testing()
+        add_executable(my_example_test my_test.c)
+        target_link_libraries(my_example_test mtest)
+        discover_tests(my_example_test)
+        EOF
+        cat CMakeLists.txt
+        cmake -B build -DCMAKE_BUILD_TYPE=Release -S .
+        cmake --build build
+        ls build
+        ctest --test-dir build
+
+    - name: Git Submodule Test
+      run: |
+        set -x
+        mkdir ../git_submodule_mtest
+        cp example/my_test.c ../git_submodule_mtest/my_test.c
+        cd ../git_submodule_mtest
+        git config --global protocol.file.allow always
+        git config --global init.defaultBranch main
+        git config --global user.email "you@example.com"
+        git config --global user.name "Your Name"
+        git init
+        mkdir extern
+        git submodule add ../mtest extern/mtest
+        git commit -m "init mtest dependency"
+        cat <<EOF > CMakeLists.txt
+        cmake_minimum_required(VERSION 3.14)
+        project(mtest_example_fetchcontent LANGUAGES C)
+        add_subdirectory(extern/mtest)
+        enable_testing()
+        add_executable(my_example_test my_test.c)
+        target_link_libraries(my_example_test mtest)
+        discover_tests(my_example_test)
+        EOF
+        cat CMakeLists.txt
+        cmake -B build -DCMAKE_BUILD_TYPE=Release -S .
+        cmake --build build
+        ctest --test-dir build
+
+    - name: Install Test
+      run: |
+        set -x
+        cmake -B ./build -DCMAKE_BUILD_TYPE=Release -S .
+        cmake --build ./build
+        sudo cmake --install ./build
+        mkdir ../install_mtest
+        cp example/my_test.c ../install_mtest/my_test.c
+        cd ../install_mtest
+        cat <<EOF > CMakeLists.txt
+        cmake_minimum_required(VERSION 3.14)
+        project(mtest_example_install LANGUAGES C)
+        find_package(mtest REQUIRED)
+        enable_testing()
+        add_executable(my_example_test my_test.c)
+        target_link_libraries(my_example_test mtest)
+        discover_tests(my_example_test)
+        EOF
+        cat CMakeLists.txt
+        cmake -B build -DCMAKE_BUILD_TYPE=Release -S .
+        cmake --build build
+        ctest --test-dir build

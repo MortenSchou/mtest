@@ -1,3 +1,4 @@
+#include <math.h>
 #include "mtest.h"
 
 // We make a test case for each test macro in "mtest.h" for coverage testing.
