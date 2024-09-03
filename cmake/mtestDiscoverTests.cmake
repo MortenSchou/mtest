@@ -17,4 +17,10 @@ function(discover_tests)
     endforeach()
 endfunction()
 
-set(_MTEST_GENERATE_TEST_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/mtestGenerateCTestFile.cmake)
+# Specify location of the mtestGenerateCTestFile.cmake script relative to current location (not relative to where discover_tests() is called).
+if(DEFINED MTEST_IS_MAIN_PROJECT AND NOT MTEST_IS_MAIN_PROJECT)
+    set(_MTEST_GENERATE_TEST_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/mtestGenerateCTestFile.cmake PARENT_SCOPE)
+else ()
+    set(_MTEST_GENERATE_TEST_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/mtestGenerateCTestFile.cmake)
+endif ()
+
