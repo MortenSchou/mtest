@@ -125,8 +125,8 @@ otherwise installed mtest as part of your operating system.
 If you do not have mtest already installed, you can run the following two
 commands:
 ```bash
-cmake -B cmake_build -S . -DCMAKE_BUILD_TYPE=Release
-sudo cmake --install cmake_build
+cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+sudo cmake --install build
 ```
 
 Then you can add the following to your primary CMakeLists.txt:
