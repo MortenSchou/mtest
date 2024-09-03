@@ -98,6 +98,7 @@ Open a terminal and ensure you are inside your project's root
 ```bash
 mkdir extern
 git submodule add https://github.com/MortenSchou/mtest.git extern/mtest
+git commit -m "add mtest dependency"
 ```
 
 Now you can add the following to your CMakeLists.txt:
