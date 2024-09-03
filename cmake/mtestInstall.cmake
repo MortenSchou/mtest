@@ -35,8 +35,8 @@ write_basic_package_version_file(
 install(
     FILES
         cmake/mtestConfig.cmake
-        cmake/mtestCMakeHelpers.cmake
-        cmake/mtestCTestRunner.cmake
+        cmake/mtestDiscoverTests.cmake
+        cmake/mtestGenerateCTestFile.cmake
         "${CMAKE_CURRENT_BINARY_DIR}/mtestConfigVersion.cmake"
     DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/mtest"
 )

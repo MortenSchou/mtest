@@ -10,11 +10,11 @@ function(discover_tests)
                 -D "TEST_TARGET=${TARGET}"
                 -D "TEST_EXECUTABLE=$<TARGET_FILE:${TARGET}>"
                 -D "CTEST_FILE=${ctest_tests_file}"
-                -P "${_MTEST_DISCOVER_TEST_SCRIPT}"
+                -P "${_MTEST_GENERATE_TEST_SCRIPT}"
             VERBATIM
         )
         set_property(DIRECTORY APPEND PROPERTY TEST_INCLUDE_FILES "${ctest_tests_file}")
     endforeach()
 endfunction()
 
-set(_MTEST_DISCOVER_TEST_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/mtestCTestRunner.cmake)
+set(_MTEST_GENERATE_TEST_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/mtestGenerateCTestFile.cmake)

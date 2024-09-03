@@ -14,8 +14,8 @@ target_include_directories(
 # Make sure that mtest will be linked together with the C math library.
 target_link_libraries(mtest INTERFACE m)
 
-# Include the CMake Helper to get the discover_tests function exposed.
-include(cmake/mtestCMakeHelpers.cmake)
+# Include the CMake script to get the discover_tests function.
+include(cmake/mtestDiscoverTests.cmake)
 
 # Configure the example and tests if this is the main project (and not built as
 # a subproject using for example add_subdirectory).
