@@ -1,4 +1,4 @@
- # mtest
+# mtest
 A minimalist C unit testing framework
  - A single header-file with plain C and `#define` macros.
  - Plays well with CTest with a `discover_tests()` CMake function.
@@ -6,6 +6,15 @@ A minimalist C unit testing framework
 **mtest** is a simple, C-only unit testing framework inspired by [CuTest](https://cutest.sourceforge.net/) with some modern features inspired by [doctest](https://github.com/doctest/doctest).
 
 For more mature and feature-complete C/C++ testing frameworks, take a look at [Boost.Test](https://github.com/boostorg/test), [Catch2](https://github.com/catchorg/Catch2), [doctest](https://github.com/doctest/doctest), or [Google Test](https://github.com/google/googletest).
+
+## Table of Contents
+
+- [mtest](#mtest)
+  - [Usage](#usage)
+  - [Installation](#installation)
+    - [Using CMake's `FetchContent` (Recommended)](#using-cmakes-fetchcontent-recommended)
+    - [Using Git external submodules](#using-git-external-submodules)
+    - [Using system-installed `mtest` (Advanced)](#using-system-installed-mtest-advanced)
 
 ## Usage
 
@@ -55,7 +64,7 @@ See [`mtest.h`](include/mtest.h) for all test macros.
 
 ## Installation
 
-### Recommended: Using CMake's FetchContent
+### Using CMake's `FetchContent` (Recommended)
 
 Recommended installation using CMake's FetchContent to download the latest release:
 ```cmake
@@ -105,7 +114,7 @@ endif()
 Updating mtest can be done with the `git submodule update` command, then
 using git to commit the updated submodule directory.
 
-### NOT RECOMMENDED: Using system installed `mtest`
+### Using system-installed `mtest` (Advanced)
 
 This is likely not what you want, and it is recommended you pick one of the
 other approaches, as this does not ensure that anyone using your project will
