@@ -2,20 +2,37 @@ cmake_minimum_required(VERSION 3.14)
 project(mtest VERSION 0.1.1 LANGUAGES C)
 
 # Determine if mtest is built as a subproject (using add_subdirectory) or if it is the main project.
-set(MAIN_PROJECT OFF)
+set(MTEST_IS_MAIN_PROJECT OFF)
 if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
-    set(MAIN_PROJECT ON)
+    set(MTEST_IS_MAIN_PROJECT ON)
 endif()
 
-add_library(mtest INTERFACE)                        # Define mtest as an interface target (since it is header-only). 
-target_include_directories(mtest INTERFACE include) # Here we define the include directory (containing "mtest.h"), and
-target_link_libraries(mtest INTERFACE m)            # we make sure that projects using mtest will link with the C math library.
+# Define mtest as an interface target (since it is header-only).
+add_library(mtest INTERFACE)
 
-# Include the definition of the discover_tests function.
-include(cmake/mtest.cmake)
+# Define the include directory (containing "mtest.h").
+target_include_directories(
+    mtest INTERFACE
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
+    $<INSTALL_INTERFACE:include>
+)
 
-# Configure the example test if this is the main project.
-if(${MAIN_PROJECT})
+# Make sure that mtest will be linked together with the C math library.
+target_link_libraries(mtest INTERFACE m)
+
+# Include the CMake script to get the discover_tests function.
+include(cmake/mtestDiscoverTests.cmake)
+
+# Configure the example and tests if this is the main project (and not built as
+# a subproject using for example add_subdirectory).
+if(MTEST_IS_MAIN_PROJECT)
+    # Add the needed install configuration to allow mtest to be installed as a
+    # system wide library.
+    include(cmake/mtestInstall.cmake)
+
+    # Enable testing in CMake and include our /example and /test subdirectories
+    # which hold the internal mtest tests to validate mtest functions as
+    # expected.
     enable_testing()
     add_subdirectory(example)
     add_subdirectory(test)

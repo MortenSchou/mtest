@@ -10,16 +10,16 @@ function(discover_tests)
                 -D "TEST_TARGET=${TARGET}"
                 -D "TEST_EXECUTABLE=$<TARGET_FILE:${TARGET}>"
                 -D "CTEST_FILE=${ctest_tests_file}"
-                -P "${_MTEST_DISCOVER_TEST_SCRIPT}"
+                -P "${_MTEST_GENERATE_TEST_SCRIPT}"
             VERBATIM
         )
         set_property(DIRECTORY APPEND PROPERTY TEST_INCLUDE_FILES "${ctest_tests_file}")
     endforeach()
 endfunction()
 
-# Specify location of the mtest_add_tests.cmake script relative to current location (not relative to where discover_tests() is called). 
-if(${MAIN_PROJECT})
-    set(_MTEST_DISCOVER_TEST_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/mtest_add_tests.cmake)
+# Specify location of the mtestGenerateCTestFile.cmake script relative to current location (not relative to where discover_tests() is called).
+if(DEFINED MTEST_IS_MAIN_PROJECT AND NOT MTEST_IS_MAIN_PROJECT)
+    set(_MTEST_GENERATE_TEST_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/mtestGenerateCTestFile.cmake PARENT_SCOPE)
 else ()
-    set(_MTEST_DISCOVER_TEST_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/mtest_add_tests.cmake PARENT_SCOPE)
+    set(_MTEST_GENERATE_TEST_SCRIPT ${CMAKE_CURRENT_LIST_DIR}/mtestGenerateCTestFile.cmake)
 endif ()
