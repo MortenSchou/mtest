@@ -20,7 +20,7 @@ Ensure the CMake library target `mtest` is available, see the below [Installatio
 
 Once you have installed `mtest`, add something like the following code to your [CMakeLists.txt](example/CMakeLists.txt).
 ```cmake
-# Put `FetchContent_MakeAvailable(mtest ...)`, `add_subdirectory(mtest)` or `find_package(mtest)` here.
+# Put `FetchContent_MakeAvailable(mtest)`, `add_subdirectory(mtest)` or `find_package(mtest)` here.
 
 add_executable(my_example_test my_test.c)
 target_link_libraries(my_example_test mtest)
