@@ -68,8 +68,8 @@ Recommended installation using CMake's FetchContent to download the latest relea
 ```cmake
 include(FetchContent)
 FetchContent_Declare(mtest
-    URL https://github.com/MortenSchou/mtest/archive/refs/tags/v0.2.0.zip
-    URL_HASH SHA256=bec1e90fb00a5bc155de12ed5ed39ea5d1a1b6fcfb6c80cce5ad3e38e360248c
+    URL https://github.com/MortenSchou/mtest/archive/refs/tags/v0.2.1.zip
+    URL_HASH SHA256=1f3b5e0d685a7e7b8beca3c47c7bbcd23d932f46d68723a36bc270202f7a60f2
 )
 FetchContent_MakeAvailable(mtest)
 ```
