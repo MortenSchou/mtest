@@ -77,7 +77,7 @@ static int test_name(void) {                                                    
     int(*test_functions[])(void) = {__VA_ARGS__};                                                                       \
     for (int i = 0; i < (int)(sizeof(test_functions)/sizeof(int(*)(void))); ++i)                                        \
         test_functions[i]() ? failed++ : success++;                                                                     \
-    printf("Tests run: %d. Succeeded: %d. Failed: %d", success+failed, success, failed);                                \
+    printf("Tests run: %d. Succeeded: %d. Failed: %d\n", success+failed, success, failed);                              \
     if (failed) exit(EXIT_FAILURE);                                                                                     \
 } while(0)
 
